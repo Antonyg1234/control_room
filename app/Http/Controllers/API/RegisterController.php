@@ -96,17 +96,11 @@ class RegisterController extends BaseController
             $user_details = User::where([
                 ['forgot_password_link', '=', $id]
             ])->first();
-            
-            dd($user_details);
-            
-            if($otp_details){
-                $otp_arr = [
-                    "otp" => null
-                ];
-               $update_otp = User::where('email', $request->email)->update($otp_arr);
-               return json_encode(array("success" => "Password generated successfully!"));
+
+            if($user_details){
+               return json_encode($user_details);
             }else{
-                return json_encode(array("msg" => "Invalid OTP!"));
+                return json_encode(array("msg" => "Invalid Link!"));
             }
 
         }
