@@ -62,35 +62,10 @@ class RegisterController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function forgotPassword(Request $request)
+    public function forgotPassword(Request $request, $id=null)
     {
+        $id = decrypt($id);
         if($request->email){
-            if($request->otp){
-                $validator = Validator::make($request->all(), [
-                    'email' => 'required|email',
-                    'otp' => 'required|numeric'
-                ]);
-    
-                if($validator->fails()){
-                    return $this->sendError('Validation Error.', $validator->errors());
-                }
-    
-                $otp_details = User::where([
-                    ['email', '=', $request->email],
-                    ['otp', '=', $request->otp]
-                ])->first();
-
-                if($otp_details){
-                    $otp_arr = [
-                        "otp" => null
-                    ];
-                   $update_otp = User::where('email', $request->email)->update($otp_arr);
-                   return json_encode(array("success" => "Password generated successfully!"));
-                }else{
-                    return json_encode(array("msg" => "Invalid OTP!"));
-                }
-    
-            }
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email'
             ]);
@@ -102,12 +77,12 @@ class RegisterController extends BaseController
             $user_details = User::where('email', $request->email)->first();
             if($user_details){
                 $email = array('email' => $user_details->email);
-                $otp = rand(0000,9999).$user_details->id;
+                $code = rand(0000,9999).$user_details->id;
                 $data = [
-                    "otp" => $otp
+                    "forgot_password_link" => $code
                 ];
                 $updated_user_details = User::where('id', $user_details->id)->update($data);
-
+                $data["url"] = route('forgot_password', encrypt($code));
                 Mail::send('forgot_password_mail', $data, function($message) use($email) {
                     $message->to($email['email'], 'testing')->subject
                        ('MHADA Control Room Login');
@@ -115,6 +90,25 @@ class RegisterController extends BaseController
                 });
                 return json_encode($user_details);
             }
+        }
+
+        if($id !== null){
+            $user_details = User::where([
+                ['forgot_password_link', '=', $id]
+            ])->first();
+            
+            dd($user_details);
+            
+            if($otp_details){
+                $otp_arr = [
+                    "otp" => null
+                ];
+               $update_otp = User::where('email', $request->email)->update($otp_arr);
+               return json_encode(array("success" => "Password generated successfully!"));
+            }else{
+                return json_encode(array("msg" => "Invalid OTP!"));
+            }
+
         }
     }
 
