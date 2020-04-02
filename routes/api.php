@@ -23,4 +23,5 @@ Route::post('forgot-password', 'API\RegisterController@forgotPassword');
 
 Route::middleware('auth:api')->group( function () {
     Route::resource('products', 'API\ProductController');
+    Route::post('change-password', 'API\UserController@changePassword');
 });

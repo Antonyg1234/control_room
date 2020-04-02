@@ -58,7 +58,7 @@ class RegisterController extends BaseController
     }
 
     /**
-     * Login api
+     * Forgot password api
      *
      * @return \Illuminate\Http\Response
      */
@@ -68,7 +68,7 @@ class RegisterController extends BaseController
             if($request->otp){
                 $validator = Validator::make($request->all(), [
                     'email' => 'required|email',
-                    'otp' => 'required|number'
+                    'otp' => 'required|numeric'
                 ]);
     
                 if($validator->fails()){
@@ -85,7 +85,7 @@ class RegisterController extends BaseController
                         "otp" => null
                     ];
                    $update_otp = User::where('email', $request->email)->update($otp_arr);
-                   echo json_encode(array("success" => "Password generated successfully!"));
+                   return json_encode(array("success" => "Password generated successfully!"));
                 }else{
                     return json_encode(array("msg" => "Invalid OTP!"));
                 }
@@ -113,21 +113,9 @@ class RegisterController extends BaseController
                        ('MHADA Control Room Login');
                     $message->from('noreply@gmail.com');
                 });
-                echo json_encode($user_details);
+                return json_encode($user_details);
             }
         }
-
-        
-
-        // if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-        //     $user = Auth::user();
-        //     $success['token'] =  $user->createToken('MyApp')-> accessToken;
-        //     $success['name'] =  $user->name;
-
-        //     return $this->sendResponse($success, 'User login successfully.');
-        // }
-        // else{
-        //     return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
-        // }
     }
+
 }

@@ -1,1 +1,1 @@
-<p>OTP is: $otp</p>
+<p>OTP is: {{ $otp }}</p>
