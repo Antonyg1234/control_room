@@ -14,7 +14,7 @@ class AlterUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('otp')->after('password')->nullable();
+            $table->string('forgot_password_link')->after('password')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ class AlterUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['otp']);
+            $table->dropColumn(['forgot_password_link']);
         });
     }
 }
