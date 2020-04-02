@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use Mail;
+use App\Services\ResetPassword;
 
 class RegisterController extends BaseController
 {
@@ -62,48 +63,32 @@ class RegisterController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function forgotPassword(Request $request, $id=null)
+    public function checkVerifiedEmail(Request $request, ResetPassword $reset_passwd)
     {
-        $id = decrypt($id);
-        if($request->email){
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email'
-            ]);
+        $reset_passwd = $reset_passwd->checkVerifiedEmail($request->all());
+        return json_encode($reset_passwd);
+    }
 
-            if($validator->fails()){
-                return $this->sendError('Validation Error.', $validator->errors());
-            }
+    /**
+     * Forgot password api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function resetPasswordLink($id, ResetPassword $reset_passwd)
+    {
+        $reset_passwd = $reset_passwd->resetPasswordLink($id);
+        return $reset_passwd;
+    }
 
-            $user_details = User::where('email', $request->email)->first();
-            if($user_details){
-                $email = array('email' => $user_details->email);
-                $code = rand(0000,9999).$user_details->id;
-                $data = [
-                    "forgot_password_link" => $code
-                ];
-                $updated_user_details = User::where('id', $user_details->id)->update($data);
-                $data["url"] = route('forgot_password', encrypt($code));
-                Mail::send('forgot_password_mail', $data, function($message) use($email) {
-                    $message->to($email['email'], 'testing')->subject
-                       ('MHADA Control Room Login');
-                    $message->from('noreply@gmail.com');
-                });
-                return json_encode($user_details);
-            }
-        }
-
-        if($id !== null){
-            $user_details = User::where([
-                ['forgot_password_link', '=', $id]
-            ])->first();
-
-            if($user_details){
-               return json_encode($user_details);
-            }else{
-                return json_encode(array("msg" => "Invalid Link!"));
-            }
-
-        }
+    /**
+     * Forgot password api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePassword(Request $request, ResetPassword $reset_passwd)
+    {
+        $reset_passwd = $reset_passwd->updatePassword($request->all());
+        return $reset_passwd;
     }
 
 }

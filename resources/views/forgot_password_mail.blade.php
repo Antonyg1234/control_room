@@ -1,1 +1,2 @@
-<p>OTP is: {{ $url }}</p>
+<p>Click the link for below for password reset: </p>
+<p>{{ $url }}</p>
