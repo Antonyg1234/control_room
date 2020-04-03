@@ -19,8 +19,9 @@ use Illuminate\Http\Request;
 
 Route::post('register', 'API\RegisterController@register');
 Route::post('login', 'API\RegisterController@login');
-Route::post('forgot-password', 'API\RegisterController@forgotPassword');
-Route::get('forgot-password/{id}', 'API\RegisterController@forgotPassword')->name('forgot_password');
+Route::post('forgot-password', 'API\RegisterController@checkVerifiedEmail');
+Route::get('forgot-password/{id}', 'API\RegisterController@resetPasswordLink')->name('reset_password_link');
+Route::post('update-password', 'API\RegisterController@updatePassword')->name('update_password');
 
 Route::middleware('auth:api')->group( function () {
     Route::resource('products', 'API\ProductController');
