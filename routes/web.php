@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('forgot-password', 'PasswordController@checkVerifiedEmail');
+Route::get('forgot/password/{id}', 'PasswordController@resetPasswordLink')->name('reset_password_link');
+Route::post('update-password', 'PasswordController@updatePassword')->name('update_password');

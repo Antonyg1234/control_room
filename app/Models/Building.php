@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Building extends Model
 {
-    //
+    protected $table_name = "buildings";
+
+    protected $fillable = ["location_id", "ward_id", "name", "number", "address"];
 }

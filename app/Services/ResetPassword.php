@@ -8,6 +8,8 @@ use App\User;
 use Validator;
 use Mail;
 use App\PasswordReset;
+use App\Notifications\PasswordResetRequest;
+use App\Notifications\PasswordResetSuccess;
 
 use GuzzleHttp\Client;
 
@@ -43,12 +45,9 @@ class ResetPassword{
                     $email_details = PasswordReset::create($data);
                 }
                 if($email_details){
-                    $data["url"] = route('reset_password_link', encrypt($code));
-                    Mail::send('forgot_password_mail', $data, function($message) use($email) {
-                        $message->to($email['email'], 'testing')->subject
-                           ('MHADA Control Room password reset');
-                        $message->from('amarpr94@gmail.com');
-                    });
+                    $passwordReset["token"] = encrypt($code);
+                    $passwordReset["email"] = $user_details->email;
+                    $user_details->notify(new PasswordResetRequest($passwordReset));
                     return $user_details;
                 }
             }else{
@@ -110,7 +109,10 @@ class ResetPassword{
             $data['password'] = bcrypt($request['password']);
             $updated_user_details = User::where('email', $email_details->email)->update($data);
             if($updated_user_details){
+                $user_details = User::where('email', $email_details->email)->first();
                 $deleted_record = PasswordReset:: where('email', $email_details->email)->delete();
+                $passwordReset['email'] = $email_details->email;
+                $user_details->notify(new PasswordResetSuccess($passwordReset));
                 return json_encode(array("msg" => "Password reset successfully!"));
             }else{
                 return json_encode(array("msg" => "Email address not found!"));
