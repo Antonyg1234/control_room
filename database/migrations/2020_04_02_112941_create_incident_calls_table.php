@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterUsersTable extends Migration
+class CreateIncidentCallsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AlterUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('forgot_password_link')->after('password')->nullable();
+        Schema::create('incident_calls', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('incident_id');
+            $table->integer('call_id');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AlterUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['forgot_password_link']);
-        });
+        Schema::dropIfExists('incident_calls');
     }
 }

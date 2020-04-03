@@ -14,6 +14,8 @@ class AddColumnMobUserNameToUsersTbl extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->string('last_name')->nullable()->after('email');
+            $table->string('first_name')->nullable()->after('email');
             $table->string('user_name')->nullable()->after('email');
             $table->string('mobile')->nullable()->after('password');
         });
@@ -27,7 +29,10 @@ class AddColumnMobUserNameToUsersTbl extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('last_name');
+            $table->dropColumn('first_name');
+            $table->dropColumn('user_name');
+            $table->dropColumn('mobile');
         });
     }
 }
