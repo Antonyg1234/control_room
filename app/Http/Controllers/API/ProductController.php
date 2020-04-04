@@ -18,9 +18,9 @@ class ProductController extends BaseController
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate(10);
 
-        return $this->sendResponse(ProductResource::collection($products), 'Products retrieved successfully.');
+        return $this->sendResponse(new ProductResource($products), 'Products retrieved successfully.');
     }
     /**
      * Store a newly created resource in storage.

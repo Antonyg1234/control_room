@@ -59,6 +59,20 @@ class RegisterController extends BaseController
     }
 
     /**
+     * Logout api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        if (Auth::check()) {
+            Auth::user()->AauthAcessToken()->delete();
+
+            return $this->sendResponse([], 'User logged out successfully.');
+        }
+    }
+
+    /**
      * Forgot password api
      *
      * @return \Illuminate\Http\Response
