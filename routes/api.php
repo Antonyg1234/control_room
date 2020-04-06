@@ -23,7 +23,9 @@ Route::post('forgot-password', 'API\PasswordController@checkVerifiedEmail');
 Route::get('forgot/password/{id}', 'API\PasswordController@resetPasswordLink')->name('reset_password_link');
 Route::post('update-password', 'API\PasswordController@updatePassword')->name('update_password');
 
-Route::middleware('auth:api')->group( function () {
-    Route::resource('products', 'API\ProductController');
-    Route::post('change-password', 'API\UserController@changePassword');
+Route::middleware('auth:api')->namespace('API')->group( function () {
+    Route::post('logout','RegisterController@logout');
+    Route::resource('products', 'ProductController');
+    Route::get('calls', 'RecordCallController@index');
+    Route::post('change-password', 'UserController@changePassword');
 });
