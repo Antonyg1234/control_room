@@ -8,5 +8,5 @@ class Zone extends Model
 {
     protected $table_name = "zones";
 
-    protected $fillable = ["name", "description"];
+    protected $gaurded = [];
 }

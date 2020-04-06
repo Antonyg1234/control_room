@@ -8,5 +8,5 @@ class Severity extends Model
 {
     protected $table_name = "severities";
 
-    protected $fillable = ["name"];
+    protected $gaurded = [];
 }

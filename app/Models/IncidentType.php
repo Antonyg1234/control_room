@@ -8,5 +8,5 @@ class IncidentType extends Model
 {
     protected $table_name = "incident_types";
 
-    protected $fillable = ["name", "description"];
+    protected $gaurded = [];
 }

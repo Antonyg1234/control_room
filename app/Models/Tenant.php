@@ -8,5 +8,5 @@ class Tenant extends Model
 {
     protected $table_name = "tenants";
 
-    protected $fillable = ["building_id", "flat_no", "first_name", "last_name", "middele_name"];
+    protected $gaurded = [];
 }
